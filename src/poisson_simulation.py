@@ -9,15 +9,15 @@ def plot_poisson_pmf(lambda_param=8, max_l=20):
         lambda_param (float): 泊松分布参数λ
         max_l (int): 最大的l值
     """
-    l_values = np.arange(max_l)
-    pmf = (lambda_param**l_values * np.exp(-lambda_param)) / factorial(l_values)
+    l_values = np.arange(max_l)         #统计到发生20次
+    pmf = (lambda_param**l_values * np.exp(-lambda_param)) / factorial(l_values)#柏松分布质量分布函数值，factorial是阶乘
     
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10, 6))#绘图
     plt.plot(l_values, pmf, 'bo-', label='Theoretical Distribution')
     plt.title(f'Poisson Probability Mass Function (λ={lambda_param})')
     plt.xlabel('l')
     plt.ylabel('p(l)')
-    plt.grid(True)
+    plt.grid(True)#加入网格线
     plt.legend()
     return pmf
 
@@ -35,9 +35,9 @@ def simulate_coin_flips(n_experiments=10000, n_flips=100, p_head=0.08):
     results = []  #记录硬币正面朝上的次数
     for i in range(n_experiments):
         coins = np.random.choice([0,1],n_flips, p=[1-p_head,p_head]) #抛硬币100次
-        results.append(coins.sum())
+        results.append(coins.sum())#采用0-1分布统计正面朝上的次数
 
-    return np.array(results)
+    return np.array(results)#返回每次实验的正面向上次数组成的行向量
 
 def compare_simulation_theory(n_experiments=10000, lambda_param=8):
     """比较实验结果与理论分布
@@ -52,7 +52,7 @@ def compare_simulation_theory(n_experiments=10000, lambda_param=8):
     # 计算理论分布
     max_l = max(int(lambda_param * 2), max(results) + 1)
     l_values = np.arange(max_l)
-    pmf = (lambda_param**l_values * np.exp(-lambda_param)) / factorial(l_values)
+    pmf = (lambda_param**l_values * np.exp(-lambda_param)) / factorial(l_values)#把整个行向量丢到理论公式里计算
     
     # 绘制直方图和理论曲线
     plt.figure(figsize=(12, 7))
