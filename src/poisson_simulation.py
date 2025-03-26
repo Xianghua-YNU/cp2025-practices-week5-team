@@ -50,7 +50,7 @@ def compare_simulation_theory(n_experiments=10000, lambda_param=8):
     results = simulate_coin_flips(n_experiments)
     
     # 计算理论分布
-    max_l = max(int(lambda_param * 2), max(results) + 1)
+    max_l = max(int(lambda_param * 2), max(results) + 1)#若正面向上次数碰巧都小，就取l为16,否则取最大的正面向上次数
     l_values = np.arange(max_l)
     pmf = (lambda_param**l_values * np.exp(-lambda_param)) / factorial(l_values)#把整个行向量丢到理论公式里计算
     
