@@ -15,7 +15,7 @@ def random_walk_finals(num_steps=1000, num_walks=1000):
         tuple: 包含两个numpy数组的元组 (x_finals, y_finals)
             - x_finals: 所有随机游走终点的x坐标数组
             - y_finals: 所有随机游走终点的y坐标数组
-    """]
+    """
     x_finals = np.zeros(num_walks)
     y_finals = np.zeros(num_walks)
     for i in range(num_walks):
@@ -67,11 +67,11 @@ def analyze_step_dependence():
             - msd: 对应的均方位移数组
             - k: 拟合得到的比例系数
     """
-     steps, msd = calculate_mean_square_displacement()
-     msd = np.array(msd)
-     k = np.sum(steps * msd) / np.sum(steps**2)
+    steps, msd = calculate_mean_square_displacement()
+    msd = np.array(msd)
+    k = np.sum(steps * msd) / np.sum(steps**2)
     
-     return steps, msd, k
+    return steps, msd, k
     # TODO: 实现数据分析
     # 提示：
     # 1. 调用calculate_mean_square_displacement获取数据
