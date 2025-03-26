@@ -22,10 +22,10 @@ def random_walk_finals(num_steps=1000, num_walks=1000):
     # 1. 使用np.zeros初始化数组
     # 2. 使用np.random.choice生成随机步长
     # 3. 使用np.sum计算总位移
-    x_steps = np.random.choice([-1,1], size=(num_walks, num_steps))  #初始化x和y方向的位移数组，形状为(num_walks,num_steps)
-    y_steps = np.random.choice([-1,1], size=(num_walks, num_steps))
-    x_finals = np.sum(x_steps, axis=0)  #计算每个游走的总位移，即每行的累加和
-    y_finals = np.sum(y_steps, axis=0)
+    x_steps = np.random.choice([-1,1], size=(num_walks, num_steps))  #生成x y方向上的步长矩阵，每个元素独立取+-1
+    y_steps = np.random.choice([-1,1], size=(num_walks, num_steps))  #形状 :(num_walks,num_steps)每行代表一次独立游走
+    x_finals = np.sum(x_steps, axis=1)  #计算每个游走的累积位移，即每行的累加和（沿axis=1求和）
+    y_finals = np.sum(y_steps, axis=1)
     return x_finals, y_finals
 
 
@@ -47,11 +47,11 @@ def calculate_mean_square_displacement():
     # 2. 计算位移平方和
     # 3. 使用np.mean计算平均值
     steps = np.array([1000, 2000, 3000, 4000])  #预设的步数序列
-    msd = np.zeros_like(steps,dtype=float)
-    for i, num_steps in enumerate(steps):  #对每个步数进行模拟
-        x_finals, y_finals = random_walk_finals(num_steps=num_steps, num_walks=1000)  #进行1000次随机游走，获取终点坐标
-        displacement_squared = x_finals**2+y_finals**2  #计算每个游走的位移平方和
-        msd[i] = np.mean(displacement_squared)  #计算均方位移（取平均值）
+    msd = np.zeros(len(steps))  #初始化MSD储存数组
+    for i, n in enumerate(steps):
+        x,y =random_walk_finals(num_steps=n,num_walks=1000) #进行1000次随机游走，获取终点坐标
+        displacement_sq = x**2+y**2  #计算每个游走的位移平方和
+        msd[i] = np.mean(displacement_sq)  #计算均方位移（取平均值）
     return steps, msd
 
 
@@ -80,6 +80,7 @@ def analyze_step_dependence():
 
 
 
+
 if __name__ == "__main__":
     # TODO: 完成主程序
     # 提示：
@@ -88,15 +89,20 @@ if __name__ == "__main__":
     # 3. 设置图形属性
     # 4. 打印数据分析结果
     steps, msd, k = analyze_step_dependence()  #获取数据和拟合结果
-    plt.scatter(steps, msd, color='r', label='实验数据')  #绘制实验数据点
-    plt.plot(steps,k*steps,color='b',label=f'拟合(直线k={k:.4f})')  #绘制理论曲线（拟合曲线）
-    plt.title('均方位移与步数的关系')  #设置图形属性
-    plt.xlabel('步数')
-    plt.ylabel('均方位移')
+    plt.figure(figsize=[10,6])  #创建绘图窗口
+    plt.scatter(steps, msd,s=100,edgecolor='black', label=f'Simulation Data({len(steps)}point',zorder=3)  #绘制实验数据点
+    fit_line = k*steps
+    plt.plot(steps, fit_line, 'r--',lw=2,label=f'Linear Fit:MSD={k:.3f}N',zorder=2)     #绘制理论拟合线
+    plt.plot(steps,2*steps,'g-',lw=2,label='Theoretical:MSD=2N',zorder=1)  #绘制理论曲线（拟合曲线）
+    plt.title('均方位移与步数的关系',fontsize=14)  #设置图形属性
+    plt.xlabel('步数(N)', fontsize=12)
+    plt.ylabel('均方位移(MSD)', fontsize=12)
     plt.legend()
-    plt.grid(True)
+    plt.grid(True,alpha=0.3)
+    plt.tight_layout()
     plt.show()  #显示图形
     print("数据分析结果:")  #打印数据分析结果
     print(f"步数:{steps}")
     print(f"均方位移:{msd}")
     print(f"拟合得到的比例系数k:{k:.4f}")
+    print("理论预期值k=2.0（二维无约束随机游走）",f"相对误差:{abs(k-2.0)/2.0*100:.2f}%")
