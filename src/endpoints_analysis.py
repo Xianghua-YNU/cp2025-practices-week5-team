@@ -48,6 +48,7 @@ def plot_endpoints_distribution(endpoints):
     # 1. 使用endpoints解包获取x和y坐标
     # 2. 使用plt.scatter绘制散点图
     # 3. 设置坐标轴比例、标题和标签
+    计划计划
     pass
 
 def analyze_x_distribution(endpoints):
